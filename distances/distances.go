@@ -63,6 +63,28 @@ func Chebyshev(x, y []float64) (float64, error) {
 	return max, nil
 }
 
+func Minkowski(x, y []float64, p float64) (float64, error) {
+	if len(x) != len(y) {
+		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+	}
+
+	if p == math.Inf(0) {
+		return Chebyshev(x, y)
+	}
+
+	zipped := zip(x, y)
+	var total float64
+	var abs float64
+
+	for _, v := range zipped {
+		abs = math.Abs(v[0] - v[1])
+		total += math.Pow(abs, p)
+	}
+	total = math.Pow(total, 1/p)
+
+	return total, nil
+}
+
 func zip(x, y []float64) [][]float64 {
 	var zipped [][]float64
 
