@@ -57,6 +57,25 @@ func TestChebyshevWithOneDimensionAndEqualVectors(t *testing.T) {
 	}
 }
 
+func TestMinkowskiWithOneDimensionAndEqualVectors(t *testing.T) {
+	var equalVectorsTests = []struct {
+		vectorX  []float64
+		p        float64
+		expected float64
+	}{
+		{[]float64{1}, 2., 0.},
+		{[]float64{2}, 1., 0.},
+		{[]float64{3}, math.Inf(0), 0.},
+	}
+	for _, v := range equalVectorsTests {
+		distance, _ := distances.Minkowski(v.vectorX, v.vectorX, v.p)
+
+		if distance != v.expected {
+			t.Errorf("Minkowski(%f, %f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorX, v.p, v.expected, distance)
+		}
+	}
+}
+
 var diferrentVectorsTests = []struct {
 	vectorX, vectorY []float64
 	expected         float64
@@ -102,6 +121,25 @@ func TestChebyshevWithOneDimensionDiffentVectors(t *testing.T) {
 
 		if distance != v.expected {
 			t.Errorf("Chebyshev(%f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.expected, distance)
+		}
+	}
+}
+
+func TestMinkowskiWithOneDimensionDiffentVectors(t *testing.T) {
+	var diferrentVectorsTests = []struct {
+		vectorX, vectorY []float64
+		p                float64
+		expected         float64
+	}{
+		{[]float64{1}, []float64{2}, 1., 1.},
+		{[]float64{2}, []float64{3}, 2., 1.},
+		{[]float64{3}, []float64{4}, math.Inf(0), 1.},
+	}
+	for _, v := range diferrentVectorsTests {
+		distance, _ := distances.Minkowski(v.vectorX, v.vectorY, v.p)
+
+		if distance != v.expected {
+			t.Errorf("Minkowski(%f, %f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.p, v.expected, distance)
 		}
 	}
 }
@@ -175,6 +213,27 @@ func TestChebyshevkWithNDimensions(t *testing.T) {
 	}
 }
 
+func TestMinkowskiWithNDimensions(t *testing.T) {
+	var diferrentVectorsTests = []struct {
+		vectorX, vectorY []float64
+		p                float64
+		expected         float64
+	}{
+		{[]float64{4, 5, 6, 7}, []float64{3, 9, 8, 1}, 1., 13.},
+		{[]float64{1, 2, 3, 4}, []float64{1, 2, 3, 1}, 2., 3.},
+		{[]float64{4, 5, 6, 7}, []float64{3, 9, 8, 1}, 2., math.Sqrt(57.)},
+		{[]float64{4, 5, 6, 7}, []float64{3, 9, 8, 1}, math.Inf(0), 6.},
+	}
+
+	for _, v := range diferrentVectorsTests {
+		distance, _ := distances.Minkowski(v.vectorX, v.vectorY, v.p)
+
+		if distance != v.expected {
+			t.Errorf("Minkowski(%f, %f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.p, v.expected, distance)
+		}
+	}
+}
+
 var wrongDimensionsTests = []struct {
 	vectorX, vectorY []float64
 	expected         error
@@ -221,6 +280,17 @@ func TestChebyshevWithErrorDimensionMismatch(t *testing.T) {
 
 		if err.Error() != v.expected.Error() {
 			t.Errorf("Chebyshev(%f, %f): expect %v, got %v", v.vectorX, v.vectorY, v.expected, err)
+		}
+	}
+}
+
+func TestMinkowskiWithErrorDimensionMismatch(t *testing.T) {
+	p := 0.
+	for _, v := range wrongDimensionsTests {
+		_, err := distances.Minkowski(v.vectorX, v.vectorY, p)
+
+		if err.Error() != v.expected.Error() {
+			t.Errorf("Minkowski(%f, %f, %f): expect %v, got %v", v.vectorX, v.vectorY, p, v.expected, err)
 		}
 	}
 }
