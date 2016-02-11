@@ -84,6 +84,23 @@ func Minkowski(x, y []float64, p float64) (float64, error) {
 	return math.Pow(total, 1/p), nil
 }
 
+func Hamming(x, y []float64) (float64, error) {
+	if len(x) != len(y) {
+		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+	}
+
+	var dist float64 = 0
+	zipped := zip(x, y)
+
+	for _, v := range zipped {
+		if v[0] != v[1] {
+			dist++
+		}
+	}
+
+	return dist, nil
+}
+
 func zip(x, y []float64) [][]float64 {
 	var zipped [][]float64
 

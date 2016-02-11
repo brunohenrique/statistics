@@ -76,6 +76,16 @@ func TestMinkowskiWithOneDimensionAndEqualVectors(t *testing.T) {
 	}
 }
 
+func TestHammingWithOneDimensionAndEqualVectors(t *testing.T) {
+	for _, v := range equalVectorsTests {
+		distance, _ := distances.Hamming(v.vectorX, v.vectorX)
+
+		if distance != v.expected {
+			t.Errorf("Hamming(%f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorX, v.expected, distance)
+		}
+	}
+}
+
 var diferrentVectorsTests = []struct {
 	vectorX, vectorY []float64
 	expected         float64
@@ -140,6 +150,16 @@ func TestMinkowskiWithOneDimensionDiffentVectors(t *testing.T) {
 
 		if distance != v.expected {
 			t.Errorf("Minkowski(%f, %f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.p, v.expected, distance)
+		}
+	}
+}
+
+func TestHammingWithOneDimensionDiffentVectors(t *testing.T) {
+	for _, v := range diferrentVectorsTests {
+		distance, _ := distances.Hamming(v.vectorX, v.vectorY)
+
+		if distance != v.expected {
+			t.Errorf("Hamming(%f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.expected, distance)
 		}
 	}
 }
@@ -234,6 +254,25 @@ func TestMinkowskiWithNDimensions(t *testing.T) {
 	}
 }
 
+func TestHammingWithNDimensions(t *testing.T) {
+	var tests = []struct {
+		vectorX, vectorY []float64
+		expected         float64
+	}{
+		{[]float64{4, 5, 6, 7}, []float64{3, 9, 8, 1}, 4.},
+		{[]float64{1, 2, 3, 4}, []float64{1, 2, 3, 1}, 1.},
+		{[]float64{1, 0, 1, 1, 1, 0, 1}, []float64{1, 0, 0, 1, 0, 0, 1}, 2.},
+	}
+
+	for _, v := range tests {
+		distance, _ := distances.Hamming(v.vectorX, v.vectorY)
+
+		if distance != v.expected {
+			t.Errorf("Hamming(%f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.expected, distance)
+		}
+	}
+}
+
 var wrongDimensionsTests = []struct {
 	vectorX, vectorY []float64
 	expected         error
@@ -291,6 +330,16 @@ func TestMinkowskiWithErrorDimensionMismatch(t *testing.T) {
 
 		if err.Error() != v.expected.Error() {
 			t.Errorf("Minkowski(%f, %f, %f): expect %v, got %v", v.vectorX, v.vectorY, p, v.expected, err)
+		}
+	}
+}
+
+func TestHammingWithErrorDimensionMismatch(t *testing.T) {
+	for _, v := range wrongDimensionsTests {
+		_, err := distances.Hamming(v.vectorX, v.vectorY)
+
+		if err.Error() != v.expected.Error() {
+			t.Errorf("Hamming(%f, %f): expect %v, got %v", v.vectorX, v.vectorY, v.expected, err)
 		}
 	}
 }
