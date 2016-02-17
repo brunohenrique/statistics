@@ -99,6 +99,23 @@ func Hamming(x, y []float64) (float64, error) {
 	return dist, nil
 }
 
+func Cosine(x, y []float64) (float64, error) {
+	if len(x) != len(y) {
+		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+	}
+
+	var dotXY, dotXX, dotYY float64
+
+	zipped := zip(x, y)
+	for _, v := range zipped {
+		dotXY += v[0] * v[1]
+		dotXX += math.Pow(v[0], 2)
+		dotYY += math.Pow(v[1], 2)
+	}
+
+	return 1 - dotXY/(math.Sqrt(dotXX*dotYY)), nil
+}
+
 func zip(x, y []float64) [][]float64 {
 	var zipped [][]float64
 

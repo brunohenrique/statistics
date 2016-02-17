@@ -86,6 +86,16 @@ func TestHammingWithOneDimensionAndEqualVectors(t *testing.T) {
 	}
 }
 
+func TestCosineWithOneDimensionAndEqualVectors(t *testing.T) {
+	for _, v := range equalVectorsTests {
+		distance, _ := distances.Cosine(v.vectorX, v.vectorX)
+
+		if distance != v.expected {
+			t.Errorf("Cosine(%f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorX, v.expected, distance)
+		}
+	}
+}
+
 var diferrentVectorsTests = []struct {
 	vectorX, vectorY []float64
 	expected         float64
@@ -273,6 +283,23 @@ func TestHammingWithNDimensions(t *testing.T) {
 	}
 }
 
+func TestCosineWithNDimensions(t *testing.T) {
+	var tests = []struct {
+		vectorX, vectorY []float64
+		expected         float64
+	}{
+		{[]float64{4, 5, 6, 7}, []float64{3, 9, 8, 1}, 1. - 112./math.Sqrt(19530.)},
+	}
+
+	for _, v := range tests {
+		distance, _ := distances.Cosine(v.vectorX, v.vectorY)
+
+		if distance != v.expected {
+			t.Errorf("Cosine(%f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.expected, distance)
+		}
+	}
+}
+
 var wrongDimensionsTests = []struct {
 	vectorX, vectorY []float64
 	expected         error
@@ -340,6 +367,16 @@ func TestHammingWithErrorDimensionMismatch(t *testing.T) {
 
 		if err.Error() != v.expected.Error() {
 			t.Errorf("Hamming(%f, %f): expect %v, got %v", v.vectorX, v.vectorY, v.expected, err)
+		}
+	}
+}
+
+func TestCosineWithErrorDimensionMismatch(t *testing.T) {
+	for _, v := range wrongDimensionsTests {
+		_, err := distances.Cosine(v.vectorX, v.vectorY)
+
+		if err.Error() != v.expected.Error() {
+			t.Errorf("Cosine(%f, %f): expect %v, got %v", v.vectorX, v.vectorY, v.expected, err)
 		}
 	}
 }
