@@ -116,6 +116,27 @@ func Cosine(x, y []float64) (float64, error) {
 	return 1 - dotXY/(math.Sqrt(dotXX*dotYY)), nil
 }
 
+func Jaccard(x, y []float64) (float64, error) {
+	if len(x) != len(y) {
+		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+	}
+
+	var intersection, union float64
+
+	zipped := zip(x, y)
+	for _, v := range zipped {
+		if v[0] != 0 && v[1] != 0 {
+			if v[0] == v[1] {
+				intersection++
+			}
+
+			union++
+		}
+	}
+
+	return 1 - (intersection / union), nil
+}
+
 func zip(x, y []float64) [][]float64 {
 	var zipped [][]float64
 

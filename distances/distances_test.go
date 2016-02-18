@@ -300,6 +300,27 @@ func TestCosineWithNDimensions(t *testing.T) {
 	}
 }
 
+func TestJaccardWithNDimensions(t *testing.T) {
+	var tests = []struct {
+		vectorX, vectorY []float64
+		expected         float64
+	}{
+		{[]float64{1, 0.5}, []float64{0.5, 1}, 1.},
+		{[]float64{4.5, 1}, []float64{4, 2}, 1.},
+		{[]float64{1, 1, 1}, []float64{1, 1, 1}, 0.},
+		{[]float64{2.5, 3.5, 3.0, 3.5, 2.5, 3.0}, []float64{3.0, 3.5, 1.5, 5.0, 3.5, 3.0}, 0.6666666666666667},
+		{[]float64{4, 5, 6, 7}, []float64{3, 9, 8, 1}, 1.},
+	}
+
+	for _, v := range tests {
+		distance, _ := distances.Jaccard(v.vectorX, v.vectorY)
+
+		if distance != v.expected {
+			t.Errorf("Jaccard(%f, %f): expect %.1f, got %.1f", v.vectorX, v.vectorY, v.expected, distance)
+		}
+	}
+}
+
 var wrongDimensionsTests = []struct {
 	vectorX, vectorY []float64
 	expected         error
@@ -377,6 +398,16 @@ func TestCosineWithErrorDimensionMismatch(t *testing.T) {
 
 		if err.Error() != v.expected.Error() {
 			t.Errorf("Cosine(%f, %f): expect %v, got %v", v.vectorX, v.vectorY, v.expected, err)
+		}
+	}
+}
+
+func TestJaccardWithErrorDimensionMismatch(t *testing.T) {
+	for _, v := range wrongDimensionsTests {
+		_, err := distances.Jaccard(v.vectorX, v.vectorY)
+
+		if err.Error() != v.expected.Error() {
+			t.Errorf("Jaccard(%f, %f): expect %v, got %v", v.vectorX, v.vectorY, v.expected, err)
 		}
 	}
 }
