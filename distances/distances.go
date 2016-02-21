@@ -10,7 +10,7 @@ var ErrDimensionMismatch = "first array has length %v which does not match the l
 func Euclidean(x, y []float64) (float64, error) {
 	sq, err := SqEuclidean(x, y)
 	if err != nil {
-		return 0., err
+		return 0, err
 	}
 
 	return math.Sqrt(sq), nil
@@ -18,7 +18,7 @@ func Euclidean(x, y []float64) (float64, error) {
 
 func SqEuclidean(x, y []float64) (float64, error) {
 	if len(x) != len(y) {
-		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+		return 0, fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
 	}
 
 	var total float64
@@ -33,7 +33,7 @@ func SqEuclidean(x, y []float64) (float64, error) {
 
 func CityBlock(x, y []float64) (float64, error) {
 	if len(x) != len(y) {
-		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+		return 0, fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
 	}
 
 	var total float64
@@ -48,7 +48,7 @@ func CityBlock(x, y []float64) (float64, error) {
 
 func Chebyshev(x, y []float64) (float64, error) {
 	if len(x) != len(y) {
-		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+		return 0, fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
 	}
 
 	var max, abs float64
@@ -64,7 +64,7 @@ func Chebyshev(x, y []float64) (float64, error) {
 
 func Minkowski(x, y []float64, p float64) (float64, error) {
 	if len(x) != len(y) {
-		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+		return 0, fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
 	}
 
 	if p == math.Inf(0) {
@@ -84,7 +84,7 @@ func Minkowski(x, y []float64, p float64) (float64, error) {
 
 func Hamming(x, y []float64) (float64, error) {
 	if len(x) != len(y) {
-		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+		return 0, fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
 	}
 
 	var dist float64
@@ -101,7 +101,7 @@ func Hamming(x, y []float64) (float64, error) {
 
 func Cosine(x, y []float64) (float64, error) {
 	if len(x) != len(y) {
-		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+		return 0, fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
 	}
 
 	var dotXY, dotXX, dotYY float64
@@ -118,7 +118,7 @@ func Cosine(x, y []float64) (float64, error) {
 
 func Jaccard(x, y []float64) (float64, error) {
 	if len(x) != len(y) {
-		return 0., fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
+		return 0, fmt.Errorf(ErrDimensionMismatch, len(x), len(y))
 	}
 
 	var intersection, union float64
